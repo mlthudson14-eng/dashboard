@@ -164,7 +164,7 @@ function header(){
 /* ---- Sleep band ---- */
 function sleep(){
   const el=$('#sleep'),goal=cfg.sleepGoal;
-  if(H.sleep==null){el.innerHTML='<div class="lab">Last night</div><p class="empty" style="grid-column:1/-1">No sleep recorded. Wear your watch to bed or turn on Sleep Focus.</p>';return}
+  if(!H.sleep){el.innerHTML='<div class="lab">Last night</div><p class="empty" style="grid-column:1/-1">No sleep recorded. Wear your watch to bed or turn on Sleep Focus.</p>';return}
   const diff=H.sleep-goal;
   const verdict=Math.abs(diff)<10?'<b style="color:var(--ok)">Right on your goal</b>':diff>0?'<b style="color:var(--ok)">'+hm(diff)+' over goal</b>':'<b>'+hm(-diff)+' short of goal</b>';
   let b=toMin(H.bed),w=toMin(H.wake),band='',ticks='',extra='';

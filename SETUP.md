@@ -27,46 +27,58 @@ Open that link on your phone once to check that it loads. It will show sample nu
 
 ## 2. Build the Shortcut
 
-In the **Shortcuts** app, tap **+** and name the shortcut **Morning Dashboard**. Add these actions in order. In brackets is the name to give each result (long-press the result → **Rename**, or use **Set Variable**). Action names can differ slightly between iOS versions.
+In the **Shortcuts** app, tap **+** and name the shortcut **Morning Dashboard**. Add these actions in order. Wherever a step says **Set Variable** `Name`, add a *Set Variable* action and type that name. Later steps pick it from the variable list. Action names can differ slightly between iOS versions.
 
 ### Sleep
-0. **Date**: type `yesterday 6:00 PM` → `[Sleep Window]`
-1. **Find Health Samples**
+1. **Date** → tap the date and type `yesterday 6:00 PM`.
+   **Set Variable** `SleepWindow`
+2. **Find Health Samples**
    - Type: **Sleep Analysis**
-   - Filter: *Start Date* **is between** `Sleep Window` and `Current Date`. To set this, tap the filter's condition and pick **is between**. Tap the first date field and choose the `Sleep Window` variable, then choose **Current Date** for the second.
+   - Filter: *Start Date* **is in the last** `2` **days**
    - Filter: *Value* **is not** In Bed
    - Filter: *Value* **is not** Awake
    - *(If you wear an Apple Watch, also add: Source **is** your watch. This stops iPhone and Watch sleep from being counted twice.)*
-   - Sort by **Start Date**, **Oldest First** → `[Sleep Samples]`
-2. **Repeat with Each** item in `Sleep Samples`:
-   - **Get Time Between Dates**: *Start Date* of Repeat Item and *End Date* of Repeat Item, in **Minutes**
-3. **End Repeat**, then **Calculate Statistics**: **Sum** of *Repeat Results* → **Round Number** (Ones) → `[Sleep]`
-4. **Get First Item** from `Sleep Samples` → **Get Details**: Start Date → **Format Date**: Custom `HH:mm` → `[Bed]`
-5. **Get Last Item** from `Sleep Samples` → **Get Details**: End Date → **Format Date**: Custom `HH:mm` → `[Wake]`
+   - Sort by **Start Date**, **Oldest First**
+3. **Repeat with Each** (it uses the Health Samples automatically). Inside it, add:
+   - **If**: tap *Input* → choose **Repeat Item**, tap it again and pick **Start Date**. Condition: **is after**. Value: tap and choose the `SleepWindow` variable.
+     - Inside the If: **Add to Variable**: `Repeat Item` → variable name `Night`
+   - Leave *Otherwise* empty, then **End If**.
+4. **End Repeat**
+5. **Repeat with Each** item in `Night`:
+   - **Get Time Between Dates**: tap the first date → Repeat Item → **Start Date**, then the second → Repeat Item → **End Date**. Unit: **Minutes**.
+6. **End Repeat** → **Calculate Statistics**: **Sum** of *Repeat Results* → **Round Number** (Ones) → **Set Variable** `Sleep`
+7. **Get Item from List**: **First Item** of `Night` → **Get Details of Health Sample**: Start Date → **Format Date**: Custom, `HH:mm` → **Set Variable** `Bed`
+8. **Get Item from List**: **Last Item** of `Night` → **Get Details of Health Sample**: End Date → **Format Date**: Custom, `HH:mm` → **Set Variable** `Wake`
+
+The two-day search catches everything. The **If** then keeps only the sleep that started after 6 PM yesterday. If you ever go to bed before 6 PM, change step 1 to `yesterday 4:00 PM`.
 
 ### Yesterday's activity
-6. **Date**: `yesterday 12:00 AM` → `[Yesterday]`
-7. **Date**: `today 12:00 AM` → `[Midnight]`
-8. **Find Health Samples**: Type **Steps**, *Start Date* **is between** `Yesterday` and `Midnight` → **Calculate Statistics**: Sum → **Round Number** → `[Steps]`
-9. Repeat step 8 with Type **Active Energy** → `[Cal]`
-10. Repeat step 8 with Type **Exercise Minutes** (sometimes listed as *Apple Exercise Time*) → `[Ex]`
+9. **Find Health Samples**
+   - Type: **Steps**
+   - Filter: *Start Date* **is in the last** `1` **days**
+   - Filter: *Start Date* **is not today**
+   - → **Calculate Statistics**: **Sum** → **Round Number** (Ones) → **Set Variable** `Steps`
+10. Same as step 9 with Type **Active Energy** → **Set Variable** `Cal`
+11. Same as step 9 with Type **Exercise Minutes** (sometimes listed as *Apple Exercise Time*) → **Set Variable** `Ex`
+
+These two filters together mean "yesterday", without needing date variables.
 
 ### Recovery
-11. **Find Health Samples**: Type **Heart Rate Variability**, sort by Start Date **Latest First**, **Limit 1** → **Get Details**: Value → **Round Number** → `[HRV]`
-12. **Find Health Samples**: Type **Resting Heart Rate**, sort **Latest First**, **Limit 1** → **Get Details**: Value → **Round Number** → `[RHR]`
+12. **Find Health Samples**: Type **Heart Rate Variability**, sort by Start Date **Latest First**, **Limit 1** → **Get Details**: Value → **Round Number** → **Set Variable** `HRV`
+13. **Find Health Samples**: Type **Resting Heart Rate**, sort **Latest First**, **Limit 1** → **Get Details**: Value → **Round Number** → **Set Variable** `RHR`
 
 ### Location (for weather)
-13. **Get Current Location** → **Get Details of Locations**: Latitude → **Round Number** (Hundredths) → `[Lat]`
-14. **Get Current Location** → **Get Details of Locations**: Longitude → **Round Number** (Hundredths) → `[Lon]`
+14. **Get Current Location** → **Get Details of Locations**: Latitude → **Round Number** (Hundredths) → **Set Variable** `Lat`
+15. **Get Current Location** → **Get Details of Locations**: Longitude → **Round Number** (Hundredths) → **Set Variable** `Lon`
 
 ### Open the dashboard
-15. **Text** (insert each variable with the variable bar, all on one line with no spaces):
+16. **Text**: type the link below, all on one line with no spaces. Wherever it shows `[Name]`, delete that and insert the variable with that name from the bar above the keyboard.
 
 ```
 https://mlthudson14-eng.github.io/dashboard/#sleep=[Sleep]&bed=[Bed]&wake=[Wake]&steps=[Steps]&cal=[Cal]&ex=[Ex]&rhr=[RHR]&hrv=[HRV]&lat=[Lat]&lon=[Lon]
 ```
 
-16. **Open URLs** (Text)
+17. **Open URLs** (Text)
 
 Tap ▶ to run it. The first time, iOS asks for permission to read each Health type and your location. Tap **Allow**. The dashboard should open in Safari with your real numbers.
 
