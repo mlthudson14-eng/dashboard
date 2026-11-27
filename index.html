@@ -193,8 +193,9 @@ function sleep(){
     const pct=m=>((m-start)/span*100).toFixed(2)+'%';
     const aslW=Math.min(1,H.sleep/inbed)*100;
     band='<div class="track" role="img" aria-label="In bed from '+clock(H.bed)+' to '+clock(H.wake)+'"><div class="blk" style="left:'+pct(b)+';width:'+(inbed/span*100).toFixed(2)+'%"><div class="asl" style="width:calc('+aslW.toFixed(1)+'% - 10px)"></div></div>'+(b+goal<end?'<div class="goal" style="left:'+pct(b+goal)+'" title="Goal"></div>':'')+'</div>';
-    ticks='<div class="ticks"><span style="left:'+pct(b)+'">'+clock(H.bed)+'</span>'+(b+goal<end&&Math.abs(b+goal-w)>75?'<span style="left:'+pct(b+goal)+'">'+(goal/60)+'h goal</span>':'')+'<span style="left:'+pct(w)+'">'+clock(H.wake)+'</span></div>';
+    ticks='<div class="ticks"><span style="left:'+pct(b)+'">'+clock(H.bed)+'</span>'+(b+goal<end-span*.1&&Math.abs(b+goal-w)>75?'<span style="left:'+pct(b+goal)+'">'+(goal/60)+'h goal</span>':'')+'<span style="left:'+pct(w)+'">'+clock(H.wake)+'</span></div>';
     extra=' · '+hm(inbed)+' in bed · '+Math.round(Math.min(1,H.sleep/inbed)*100)+'% asleep';
+    if(H.sleep>inbed+5){el.innerHTML='<div class="lab">Last night</div><p class="empty" style="grid-column:1/-1">The Shortcut reported '+hm(H.sleep)+' asleep but only '+hm(inbed)+' in bed, so some sleep was counted twice. Switch to the newest version of the Shortcut: its link starts with #sl=.</p>';return}
   }
   const week=[];for(let i=6;i>=0;i--){const d=health[daysAgo(i)];week.push(d&&d.sleep!=null?d.sleep:null)}
   const mx=Math.max(goal*1.15,...week.filter(v=>v!=null));
