@@ -30,9 +30,10 @@ Open that link on your phone once to check that it loads. It will show sample nu
 In the **Shortcuts** app, tap **+** and name the shortcut **Morning Dashboard**. Add these actions in order. In brackets is the name to give each result (long-press the result → **Rename**, or use **Set Variable**). Action names can differ slightly between iOS versions.
 
 ### Sleep
+0. **Date**: type `yesterday 6:00 PM` → `[Sleep Window]`
 1. **Find Health Samples**
    - Type: **Sleep Analysis**
-   - Filter: *Start Date* **is in the last 16 hours**
+   - Filter: *Start Date* **is between** `Sleep Window` and `Current Date`. To set this, tap the filter's condition and pick **is between**. Tap the first date field and choose the `Sleep Window` variable, then choose **Current Date** for the second.
    - Filter: *Value* **is not** In Bed
    - Filter: *Value* **is not** Awake
    - *(If you wear an Apple Watch, also add: Source **is** your watch. This stops iPhone and Watch sleep from being counted twice.)*
