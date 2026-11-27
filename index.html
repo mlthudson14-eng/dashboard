@@ -139,9 +139,28 @@ let cfg=Object.assign({},defaults,store.get('cfg',{}));
 /* ---- Health data handed over by the Shortcut in the #fragment (never sent to the server) ---- */
 let health=store.get('health',{});
 const hp=new URLSearchParams(location.hash.slice(1));
-if(['sleep','steps','rhr','hrv'].some(k=>hp.has(k))){
+/* Sleep pieces arrive as MMddHHmm-MMddHHmm, separated by dots. Keep only the latest night and merge overlaps. */
+function lastNight(str){
+  const y=now.getFullYear();
+  const toD=t=>{if(!/^\d{8}$/.test(t))return null;const d=new Date(y,+t.slice(0,2)-1,+t.slice(2,4),+t.slice(4,6),+t.slice(6,8));if(d-now>2*864e5)d.setFullYear(y-1);return d};
+  const iv=str.split(/[.,;\s]+/).map(p=>p.split('-').map(toD)).filter(a=>a.length===2&&a[0]&&a[1]&&a[1]>a[0]).sort((a,b)=>a[0]-b[0]);
+  if(!iv.length)return null;
+  let i=iv.length-1,start=+iv[i][0];
+  while(i>0&&start-iv[i-1][1]<3*36e5){i--;start=Math.min(start,+iv[i][0])}
+  const cl=iv.slice(i),end=new Date(Math.max(...cl.map(a=>+a[1])));
+  if(now-end>20*36e5)return{sleep:0};
+  let total=0,cs=null,ce=null;
+  for(const[a,b]of cl){if(ce==null||a>ce){if(ce!=null)total+=ce-cs;cs=a;ce=b}else if(b>ce)ce=b}
+  total+=ce-cs;
+  const f=d=>pad(d.getHours())+':'+pad(d.getMinutes());
+  return{sleep:Math.round(total/6e4),bed:f(cl[0][0]),wake:f(end)};
+}
+if(['sl','sleep','steps','rhr','hrv'].some(k=>hp.has(k))){
   const g=k=>num(hp.get(k));
-  health[today]={why:!hp.has('sleep')?'missing':hp.get('sleep').trim()===''?'blank':g('sleep')==null?'bad:'+hp.get('sleep').slice(0,30):g('sleep')===0?'zero':null,sleep:g('sleep'),bed:toMin(hp.get('bed'))!=null?hp.get('bed'):null,wake:toMin(hp.get('wake'))!=null?hp.get('wake'):null,steps:g('steps'),cal:g('cal'),ex:g('ex'),rhr:g('rhr'),hrv:g('hrv')};
+  let rec;
+  if(hp.has('sl')){const raw=hp.get('sl').trim(),r=lastNight(raw);rec={why:raw===''?'blank':r==null?'bad:'+raw.slice(0,30):r.sleep===0?'zero':null,sleep:r?r.sleep||null:null,bed:r&&r.bed||null,wake:r&&r.wake||null}}
+  else rec={why:!hp.has('sleep')?'missing':hp.get('sleep').trim()===''?'blank':g('sleep')==null?'bad:'+hp.get('sleep').slice(0,30):g('sleep')===0?'zero':null,sleep:g('sleep'),bed:toMin(hp.get('bed'))!=null?hp.get('bed'):null,wake:toMin(hp.get('wake'))!=null?hp.get('wake'):null};
+  health[today]=Object.assign(rec,{steps:g('steps'),cal:g('cal'),ex:g('ex'),rhr:g('rhr'),hrv:g('hrv')});
   const keys=Object.keys(health).sort();while(keys.length>60)delete health[keys.shift()];
   store.set('health',health);
 }
@@ -164,7 +183,7 @@ function header(){
 /* ---- Sleep band ---- */
 function sleep(){
   const el=$('#sleep'),goal=cfg.sleepGoal;
-  if(!H.sleep){const w=H.why||'';const m=w==='missing'?'The Shortcut didn\u2019t send a sleep value. In the Text action, check that the link has sleep= followed by the Sleep variable tag.':w==='blank'?'The Shortcut sent an empty sleep value. The Sleep variable is probably empty: check the Set Variable Sleep step, and that Night has items.':w.startsWith('bad:')?'The Shortcut sent \u201c'+w.slice(4)+'\u201d instead of a number of minutes. The tag after sleep= should be the Sleep variable.':w==='zero'?'The Shortcut found no sleep after 6 PM yesterday. Open the Health app \u2192 Sleep and check last night was recorded.':'No sleep recorded for last night.';el.innerHTML='<div class="lab">Last night</div><p class="empty" style="grid-column:1/-1">'+esc(m)+'</p>';return}
+  if(!H.sleep){const w=H.why||'';const m=w==='missing'?'The Shortcut didn\u2019t send a sleep value. In the Text action, check that the link has sl= followed by the Sleep variable tag.':w==='blank'?'The Shortcut sent an empty sleep value. The Sleep variable is probably empty: check the Set Variable Sleep step, and that Night has items.':w.startsWith('bad:')?'The Shortcut sent \u201c'+w.slice(4)+'\u201d instead of sleep times. The tag after sl= should be the Sleep variable.':w==='zero'?'The Shortcut found no sleep for last night. Open the Health app \u2192 Sleep and check last night was recorded.':'No sleep recorded for last night.';el.innerHTML='<div class="lab">Last night</div><p class="empty" style="grid-column:1/-1">'+esc(m)+'</p>';return}
   const diff=H.sleep-goal;
   const verdict=Math.abs(diff)<10?'<b style="color:var(--ok)">Right on your goal</b>':diff>0?'<b style="color:var(--ok)">'+hm(diff)+' over goal</b>':'<b>'+hm(-diff)+' short of goal</b>';
   let b=toMin(H.bed),w=toMin(H.wake),band='',ticks='',extra='';
