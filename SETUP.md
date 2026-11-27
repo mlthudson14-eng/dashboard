@@ -33,7 +33,7 @@ In the **Shortcuts** app, tap **+** and name the shortcut **Morning Dashboard**.
 1. **Date** → tap the date and type `yesterday 6:00 PM`.
    **Set Variable** `SleepWindow`
 2. **Find Health Samples**
-   - Type: **Sleep Analysis**
+   - Type: **Sleep** (called *Sleep Analysis* on older iOS versions)
    - Filter: *Start Date* **is in the last** `2` **days**
    - Filter: *Value* **is not** In Bed
    - Filter: *Value* **is not** Awake
