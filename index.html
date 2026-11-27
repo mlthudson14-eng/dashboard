@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#f8f6f8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1f1e27" media="(prefers-color-scheme: dark)">
+<title>Megan's Morning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday, calm
+   IDEA the quiet first page of a well-kept day planner: last night, the sky, today's list
+   PICTURE the night drawn as a band from bedtime to wake, sleep goal marked, 7-night strip beside it
+   COLOUR soft summer: misty lavender-white / dusk plum-grey; dusty periwinkle for sleep, dusty rose for sun and progress, muted sage for goals met
+   TYPE Figtree 600 display + Figtree 400 text
+   LAYOUT one phone screen: greeting, sleep band, weather, activity + recovery, habits and tasks filling the rest */
+:root{color-scheme:light dark;--bg:light-dark(#f8f6f8,#1f1e27);--card:light-dark(#ecebf1,#2a2934);--ink:light-dark(#3b3848,#ece9f0);--mute:light-dark(#77728a,#a9a4b5);--line:light-dark(#dad6e1,#3b3947);--night:light-dark(#7584b3,#a6b1d8);--nightsoft:light-dark(#d8dcee,#3d4262);--dawn:light-dark(#c4909b,#dcaab3);--ok:light-dark(#6e9a8e,#94bfb2)}
+*{box-sizing:border-box;min-width:0;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font:16px/1.4 Figtree,system-ui,-apple-system,sans-serif;overflow-x:clip;-webkit-font-smoothing:antialiased}
+main{min-height:100%;max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:8px;padding-top:max(10px,env(safe-area-inset-top));padding-bottom:max(12px,env(safe-area-inset-bottom));padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+h1{font-size:clamp(27px,7.5vw,34px);font-weight:600;line-height:1.05;letter-spacing:-.02em}
+.date{color:var(--mute);font-size:15px;margin-top:4px}
+.gear{background:none;border:0;color:var(--mute);width:44px;height:44px;align-self:flex-start;display:grid;place-items:center;border-radius:50%;cursor:pointer}
+.gear:active{background:var(--card)}
+.card{background:var(--card);border-radius:18px;padding:10px 14px}
+.lab{font-size:13px;color:var(--mute);font-weight:500}
+.big{font-size:28px;font-weight:600;letter-spacing:-.02em;line-height:1.05;white-space:nowrap}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.sleep{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px}
+.sub{font-size:14px;color:var(--mute)}
+.sub b{color:var(--ink);font-weight:600}
+.track{grid-column:1/-1;position:relative;height:26px;margin-top:6px;border-radius:9px;background:var(--bg)}
+.blk{position:absolute;top:0;bottom:0;border-radius:9px;background:var(--nightsoft)}
+.asl{position:absolute;top:5px;bottom:5px;left:5px;border-radius:6px;background:var(--night)}
+.goal{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);opacity:.55;border-radius:2px}
+.ticks{grid-column:1/-1;position:relative;height:16px;font-size:13px;color:var(--mute)}
+.ticks span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.week{display:flex;align-items:flex-end;gap:4px;height:44px}
+.week i{display:block;width:7px;border-radius:3px;background:var(--nightsoft)}
+.week i.met{background:var(--night)}
+.wx{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;align-items:center}
+.wx svg{width:44px;height:44px}
+.hours{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);margin-top:6px;padding-top:8px;text-align:center;font-size:14px}
+.hours small{display:block;color:var(--mute);font-size:13px}
+.duo{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:10px}
+.stat{margin-top:4px}
+.stat .row{font-size:14px}
+.stat b{font-weight:600;font-variant-numeric:tabular-nums}
+.bar{height:6px;border-radius:3px;background:var(--line);margin-top:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--dawn);border-radius:3px}
+.bar i.met{background:var(--ok)}
+.rec .big{font-size:24px}
+.rec p{font-size:13px;color:var(--mute);margin-top:2px}
+.today{flex:1;min-height:200px;display:flex;flex-direction:column}
+.habits{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 8px}
+.chk{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:6px 12px 6px 8px;cursor:pointer;font:inherit;color:inherit;text-align:left;min-height:44px}
+.dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--mute);display:grid;place-items:center;flex:none}
+.on .dot{background:var(--ok);border-color:var(--ok)}
+.on .dot::after{content:"";width:9px;height:5px;border:2px solid #fff;border-top:0;border-right:0;transform:translateY(-1px) rotate(-45deg)}
+.chk small{display:block;font-size:13px;color:var(--mute)}
+.tlist{flex:1;min-height:44px;overflow:auto;list-style:none;padding:0}
+.tlist li{display:flex;align-items:center;gap:6px;border-top:1px solid var(--line)}
+.tlist li .chk{border:0;background:none;padding:6px 0;flex:1;border-radius:0}
+.tlist li.on span{text-decoration:line-through;color:var(--mute)}
+.x{background:none;border:0;color:var(--mute);font-size:20px;width:36px;height:36px;cursor:pointer}
+form.add{display:flex;gap:8px;margin-top:6px}
+input,textarea,select{font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:9px 12px;width:100%}
+button.pri{font:inherit;font-weight:600;background:var(--ink);color:var(--bg);border:0;border-radius:12px;padding:0 16px;min-height:44px;cursor:pointer;flex:none}
+.note{font-size:13px;color:var(--mute);text-align:center}
+.empty{color:var(--mute);font-size:14px;padding:8px 0}
+dialog{border:0;border-radius:20px;background:var(--bg);color:var(--ink);width:min(92vw,440px);padding:20px}
+dialog::backdrop{background:rgba(0,0,0,.4)}
+dialog h2{font-size:22px;font-weight:600;margin-bottom:12px}
+dialog label{display:block;font-size:14px;color:var(--mute);margin:10px 0 4px}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.acts{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.acts .ghost{font:inherit;background:none;border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:0 16px;min-height:44px;cursor:pointer}
+@media(max-height:700px){.hours{display:none}.week{display:none}.sleep{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div><h1 id="hello">Good morning</h1><div class="date" id="date"></div></div>
+    <button class="gear" id="gear" aria-label="Settings"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+  </header>
+
+  <section class="card sleep" id="sleep"></section>
+  <section class="card wx" id="wx"><div class="lab" style="grid-column:1/-1">Weather is loading…</div></section>
+  <div class="duo">
+    <section class="card" id="act"></section>
+    <section class="card rec" id="rec"></section>
+  </div>
+  <section class="card today">
+    <div class="row"><span class="lab">Daily habits</span><span class="lab" id="hcount"></span></div>
+    <div class="habits" id="habits"></div>
+    <div class="row"><span class="lab">Today's tasks</span><span class="lab" id="tcount"></span></div>
+    <ul class="tlist" id="tasks"></ul>
+    <form class="add" id="addf"><input id="newtask" placeholder="Add a task" autocomplete="off" enterkeyhint="done"><button class="pri">Add</button></form>
+  </section>
+  <p class="note" id="note"></p>
+</main>
+
+<dialog id="dlg">
+  <form method="dialog" id="setf">
+    <h2>Settings</h2>
+    <label for="s-name">Name</label><input id="s-name">
+    <label for="s-hab">Daily habits, one per line</label><textarea id="s-hab" rows="3"></textarea>
+    <div class="two">
+      <div><label for="s-sleep">Sleep goal (hours)</label><input id="s-sleep" type="number" step="0.25" min="4" max="12" inputmode="decimal"></div>
+      <div><label for="s-steps">Step goal</label><input id="s-steps" type="number" step="500" min="1000" inputmode="numeric"></div>
+    </div>
+    <label for="s-units">Temperature</label><select id="s-units"><option value="f">°F</option><option value="c">°C</option></select>
+    <div class="acts"><button type="button" class="ghost" id="cancel">Cancel</button><button class="pri" id="save">Save</button></div>
+  </form>
+</dialog>
+
+<script>
+{
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const store={get(k,d){try{const v=localStorage.getItem('md_'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('md_'+k,JSON.stringify(v))}catch(e){}}};
+const pad=n=>String(n).padStart(2,'0');
+const dkey=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const now=new Date(),today=dkey(now);
+const daysAgo=n=>{const d=new Date(now);d.setDate(d.getDate()-n);return dkey(d)};
+const num=v=>{if(v==null||v==='')return null;const n=parseFloat(String(v).replace(',','.'));return isFinite(n)?n:null};
+const hm=m=>{m=Math.round(m);return m<60?m+'m':Math.floor(m/60)+'h '+pad(m%60)+'m'};
+const clock=t=>{const[h,m]=t.split(':').map(Number);return(h%12||12)+':'+pad(m)+(h<12?'a':'p')};
+const toMin=t=>{if(!/^\d{1,2}:\d{2}$/.test(t||''))return null;const[h,m]=t.split(':').map(Number);return h*60+m};
+
+const defaults={name:'Megan',habits:['Vitamins & meds'],sleepGoal:420,stepGoal:8000,units:'f'};
+let cfg=Object.assign({},defaults,store.get('cfg',{}));
+
+/* ---- Health data handed over by the Shortcut in the #fragment (never sent to the server) ---- */
+let health=store.get('health',{});
+const hp=new URLSearchParams(location.hash.slice(1));
+if(['sleep','steps','rhr','hrv'].some(k=>hp.has(k))){
+  const g=k=>num(hp.get(k));
+  health[today]={sleep:g('sleep'),bed:toMin(hp.get('bed'))!=null?hp.get('bed'):null,wake:toMin(hp.get('wake'))!=null?hp.get('wake'):null,steps:g('steps'),cal:g('cal'),ex:g('ex'),rhr:g('rhr'),hrv:g('hrv')};
+  const keys=Object.keys(health).sort();while(keys.length>60)delete health[keys.shift()];
+  store.set('health',health);
+}
+const lat=num(hp.get('lat')),lon=num(hp.get('lon'));
+if(lat!=null&&lon!=null)store.set('loc',{lat:+lat.toFixed(2),lon:+lon.toFixed(2)});
+
+const hkeys=Object.keys(health).sort();
+let H=health[today],sample=false,stale=null;
+if(!H&&hkeys.length){H=health[hkeys[hkeys.length-1]];stale=hkeys[hkeys.length-1]}
+if(!H){sample=true;H={sleep:402,bed:'21:38',wake:'04:52',steps:7340,cal:486,ex:31,rhr:57,hrv:48}}
+
+/* ---- Greeting ---- */
+function header(){
+  const h=now.getHours();
+  const part=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+  $('#hello').textContent=part+(cfg.name?', '+cfg.name:'');
+  $('#date').textContent=now.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+}
+
+/* ---- Sleep band ---- */
+function sleep(){
+  const el=$('#sleep'),goal=cfg.sleepGoal;
+  if(H.sleep==null){el.innerHTML='<div class="lab">Last night</div><p class="empty" style="grid-column:1/-1">No sleep recorded. Wear your watch to bed or turn on Sleep Focus.</p>';return}
+  const diff=H.sleep-goal;
+  const verdict=Math.abs(diff)<10?'<b style="color:var(--ok)">Right on your goal</b>':diff>0?'<b style="color:var(--ok)">'+hm(diff)+' over goal</b>':'<b>'+hm(-diff)+' short of goal</b>';
+  let b=toMin(H.bed),w=toMin(H.wake),band='',ticks='',extra='';
+  if(b!=null&&w!=null){
+    if(w<=b)w+=1440;
+    const inbed=w-b,start=Math.floor((b-60)/60)*60,end=Math.max(Math.ceil((w+60)/60)*60,start+9*60),span=end-start;
+    const pct=m=>((m-start)/span*100).toFixed(2)+'%';
+    const aslW=Math.min(1,H.sleep/inbed)*100;
+    band='<div class="track" role="img" aria-label="In bed from '+clock(H.bed)+' to '+clock(H.wake)+'"><div class="blk" style="left:'+pct(b)+';width:'+(inbed/span*100).toFixed(2)+'%"><div class="asl" style="width:calc('+aslW.toFixed(1)+'% - 10px)"></div></div>'+(b+goal<end?'<div class="goal" style="left:'+pct(b+goal)+'" title="Goal"></div>':'')+'</div>';
+    ticks='<div class="ticks"><span style="left:'+pct(b)+'">'+clock(H.bed)+'</span>'+(b+goal<end&&Math.abs(b+goal-w)>75?'<span style="left:'+pct(b+goal)+'">'+(goal/60)+'h goal</span>':'')+'<span style="left:'+pct(w)+'">'+clock(H.wake)+'</span></div>';
+    extra=' · '+hm(inbed)+' in bed · '+Math.round(Math.min(1,H.sleep/inbed)*100)+'% asleep';
+  }
+  const week=[];for(let i=6;i>=0;i--){const d=health[daysAgo(i)];week.push(d&&d.sleep!=null?d.sleep:null)}
+  const mx=Math.max(goal*1.15,...week.filter(v=>v!=null));
+  const wk=sample?'':'<div class="week" aria-label="Last 7 nights" title="Last 7 nights">'+week.map(v=>v==null?'<i style="height:3px"></i>':'<i class="'+(v>=goal-10?'met':'')+'" style="height:'+Math.max(4,v/mx*44).toFixed(0)+'px"></i>').join('')+'</div>';
+  el.innerHTML='<div><div class="lab">Last night</div><div class="big">'+hm(H.sleep)+' <span class="sub">asleep</span></div><div class="sub">'+verdict+esc(extra)+'</div></div>'+wk+band+ticks;
+}
+
+/* ---- Activity & recovery ---- */
+function activity(){
+  const steps=H.steps,sg=cfg.stepGoal;
+  const line=(label,val,unit,goal)=>{if(val==null)return'';const p=goal?Math.min(100,val/goal*100):null;return'<div class="stat"><div class="row"><span>'+label+'</span><b>'+Math.round(val).toLocaleString()+unit+'</b></div>'+(p!=null?'<div class="bar"><i class="'+(p>=100?'met':'')+'" style="width:'+p.toFixed(0)+'%"></i></div>':'')+'</div>'};
+  $('#act').innerHTML='<div class="lab">Yesterday</div>'+(steps==null&&H.cal==null&&H.ex==null?'<p class="empty">No activity data.</p>':line('Steps',steps,'',sg)+line('Exercise',H.ex,' min',30)+line('Active',H.cal,' cal',null));
+  const prior=hkeys.filter(k=>k!==today&&health[k].hrv!=null).slice(-30).map(k=>health[k].hrv);
+  const priorR=hkeys.filter(k=>k!==today&&health[k].rhr!=null).slice(-30).map(k=>health[k].rhr);
+  const avg=a=>a.reduce((s,v)=>s+v,0)/a.length;
+  let msg;
+  if(sample)msg='Compared with your own normal after 5 mornings.';
+  else if(prior.length<5)msg='Learning your normal: day '+(prior.length+1)+' of 5.';
+  else{const d=(H.hrv-avg(prior))/avg(prior);msg=H.hrv==null?'':d>.08?'HRV above your usual ('+Math.round(avg(prior))+'). Good day to push.':d<-.12?'HRV below your usual ('+Math.round(avg(prior))+'). Take it easier.':'In your normal range (avg '+Math.round(avg(prior))+').'}
+  const rd=priorR.length>=5&&H.rhr!=null?Math.round(H.rhr-avg(priorR)):null;
+  $('#rec').innerHTML='<div class="lab">Recovery</div><div class="row" style="margin-top:4px"><div><div class="big">'+(H.hrv!=null?Math.round(H.hrv):'–')+'</div><p>HRV (ms)</p></div><div><div class="big">'+(H.rhr!=null?Math.round(H.rhr):'–')+'</div><p>Resting HR'+(rd?' ('+(rd>0?'+':'')+rd+')':'')+'</p></div></div><p>'+esc(msg)+'</p>';
+}
+
+/* ---- Weather (Open-Meteo, no key) ---- */
+const WX=c=>c===0?['Clear','sun']:c<=2?['Partly cloudy','part']:c===3?['Cloudy','cloud']:c<=48?['Foggy','cloud']:c<=57?['Drizzle','rain']:c<=67?['Rain','rain']:c<=77?['Snow','snow']:c<=82?['Showers','rain']:c<=86?['Snow showers','snow']:['Thunderstorms','rain'];
+const ICON={
+  sun:'<circle cx="24" cy="24" r="9" fill="var(--dawn)"/><g stroke="var(--dawn)" stroke-width="2.5" stroke-linecap="round">'+[0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180;return'<line x1="'+(24+Math.cos(r)*14).toFixed(1)+'" y1="'+(24+Math.sin(r)*14).toFixed(1)+'" x2="'+(24+Math.cos(r)*18).toFixed(1)+'" y2="'+(24+Math.sin(r)*18).toFixed(1)+'"/>'}).join('')+'</g>',
+  part:'<circle cx="18" cy="18" r="8" fill="var(--dawn)"/><path d="M16 36h18a7 7 0 0 0 0-14 9 9 0 0 0-17 3 6 6 0 0 0-1 11z" fill="var(--mute)" opacity=".85"/>',
+  cloud:'<path d="M13 35h21a8 8 0 0 0 0-16 10 10 0 0 0-19 3 7 7 0 0 0-2 13z" fill="var(--mute)" opacity=".85"/>',
+  rain:'<path d="M13 29h21a8 8 0 0 0 0-16 10 10 0 0 0-19 3 7 7 0 0 0-2 13z" fill="var(--mute)" opacity=".85"/><g stroke="var(--night)" stroke-width="2.5" stroke-linecap="round"><line x1="17" y1="34" x2="15" y2="40"/><line x1="25" y1="34" x2="23" y2="40"/><line x1="33" y1="34" x2="31" y2="40"/></g>',
+  snow:'<path d="M13 29h21a8 8 0 0 0 0-16 10 10 0 0 0-19 3 7 7 0 0 0-2 13z" fill="var(--mute)" opacity=".85"/><g fill="var(--night)"><circle cx="16" cy="37" r="2"/><circle cx="24" cy="40" r="2"/><circle cx="32" cy="37" r="2"/></g>'
+};
+function renderWx(d,cached){
+  const el=$('#wx'),u=cfg.units==='c'?'°':'°',c=d.current,dl=d.daily,[word,ic]=WX(c.weather_code);
+  const hi=Math.round(dl.temperature_2m_max[0]),lo=Math.round(dl.temperature_2m_min[0]),rain=dl.precipitation_probability_max[0];
+  const t=s=>{const x=new Date(s);return clock(x.getHours()+':'+pad(x.getMinutes()))};
+  const nowIso=Date.now(),idx=d.hourly.time.findIndex(s=>new Date(s).getTime()>nowIso);
+  const slots=idx<0?[]:[0,3,6,9].map(k=>idx+k).filter(i=>i<d.hourly.time.length);
+  el.innerHTML='<svg viewBox="0 0 48 48" aria-hidden="true">'+ICON[ic]+'</svg><div><div class="row"><span class="big">'+Math.round(c.temperature_2m)+u+'</span><span class="sub">H <b>'+hi+u+'</b> · L <b>'+lo+u+'</b></span></div><div class="sub">'+word+' · feels '+Math.round(c.apparent_temperature)+u+' · '+(rain??0)+'% rain</div><div class="sub">Sunrise <b>'+t(dl.sunrise[0])+'</b> · Sunset <b>'+t(dl.sunset[0])+'</b>'+(cached?' · saved':'')+'</div></div>'+(slots.length?'<div class="hours">'+slots.map(i=>{const h=new Date(d.hourly.time[i]).getHours();return'<div><small>'+(h%12||12)+(h<12?'a':'p')+'</small>'+Math.round(d.hourly.temperature_2m[i])+u+'<small>'+d.hourly.precipitation_probability[i]+'%</small></div>'}).join('')+'</div>':'');
+}
+function weather(){
+  const loc=store.get('loc',null),cache=store.get('wx',null);
+  const ok=cache&&cache.u===cfg.units&&Date.now()-cache.t<3*3600e3;
+  if(cache&&cache.u===cfg.units)renderWx(cache.d,!ok);
+  if(ok&&!(lat!=null))return;
+  const go=(la,lo)=>{
+    const url='https://api.open-meteo.com/v1/forecast?latitude='+la+'&longitude='+lo+'&current=temperature_2m,apparent_temperature,weather_code&hourly=temperature_2m,precipitation_probability&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset&forecast_days=2&timezone=auto'+(cfg.units==='f'?'&temperature_unit=fahrenheit':'');
+    fetch(url).then(r=>r.json()).then(d=>{if(!d.current)throw 0;store.set('wx',{t:Date.now(),u:cfg.units,d});renderWx(d,false)}).catch(()=>{if(!cache)$('#wx').innerHTML='<div class="lab" style="grid-column:1/-1">Weather unavailable right now. Check your connection.</div>'})};
+  if(loc)go(loc.lat,loc.lon);
+  else if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{const l={lat:+p.coords.latitude.toFixed(2),lon:+p.coords.longitude.toFixed(2)};store.set('loc',l);go(l.lat,l.lon)},()=>{$('#wx').innerHTML='<div class="lab" style="grid-column:1/-1">Weather shows up after the morning Shortcut runs once.</div>'},{timeout:8000});
+}
+
+/* ---- Habits with streaks ---- */
+let hab=store.get('hab',{});
+function streak(name){
+  let n=0,i=(hab[today]||[]).includes(name)?0:1;
+  while((hab[daysAgo(i)]||[]).includes(name)){n++;i++}
+  return n;
+}
+function habits(){
+  const done=hab[today]||[];
+  $('#hcount').textContent=cfg.habits.length?done.filter(h=>cfg.habits.includes(h)).length+' of '+cfg.habits.length:'';
+  $('#habits').innerHTML=cfg.habits.length?cfg.habits.map((h,i)=>{const s=streak(h);return'<button class="chk'+(done.includes(h)?' on':'')+'" data-h="'+i+'"><span class="dot"></span><span>'+esc(h)+'<small>'+(s?s+'-day streak':'Start a streak')+'</small></span></button>'}).join(''):'<p class="empty">Add habits in settings.</p>';
+}
+$('#habits').addEventListener('click',e=>{
+  const b=e.target.closest('[data-h]');if(!b)return;
+  const name=cfg.habits[+b.dataset.h],d=hab[today]||[];
+  hab[today]=d.includes(name)?d.filter(x=>x!==name):d.concat(name);
+  const keys=Object.keys(hab).sort();while(keys.length>400)delete hab[keys.shift()];
+  store.set('hab',hab);habits();
+});
+
+/* ---- Tasks: unfinished ones carry over, finished ones clear the next day ---- */
+let tasks=store.get('tasks',null);
+if(!tasks)tasks=sample?[{id:1,text:'Example: pick up dry cleaning',done:false,day:today}]:[];
+tasks=tasks.filter(t=>!t.done||t.day===today);
+function saveT(){store.set('tasks',tasks);renderT()}
+function renderT(){
+  const left=tasks.filter(t=>!t.done).length;
+  $('#tcount').textContent=tasks.length?left+' left':'';
+  $('#tasks').innerHTML=tasks.length?tasks.map(t=>'<li class="'+(t.done?'on':'')+'"><button class="chk" data-t="'+t.id+'"><span class="dot"></span><span>'+esc(t.text)+'</span></button><button class="x" data-del="'+t.id+'" aria-label="Delete">×</button></li>').join(''):'<li class="empty" style="border:0">Nothing yet. Add what matters today.</li>';
+}
+$('#tasks').addEventListener('click',e=>{
+  const t=e.target.closest('[data-t]'),x=e.target.closest('[data-del]');
+  if(t){const k=tasks.find(q=>q.id==t.dataset.t);k.done=!k.done;k.day=today;saveT()}
+  if(x){tasks=tasks.filter(q=>q.id!=x.dataset.del);saveT()}
+});
+$('#addf').addEventListener('submit',e=>{
+  e.preventDefault();const v=$('#newtask').value.trim();if(!v)return;
+  tasks.push({id:Date.now(),text:v.slice(0,140),done:false,day:today});$('#newtask').value='';saveT();
+});
+
+/* ---- Settings ---- */
+const dlg=$('#dlg');
+$('#gear').addEventListener('click',()=>{
+  $('#s-name').value=cfg.name;$('#s-hab').value=cfg.habits.join('\n');$('#s-sleep').value=cfg.sleepGoal/60;$('#s-steps').value=cfg.stepGoal;$('#s-units').value=cfg.units;
+  dlg.showModal();
+});
+$('#cancel').addEventListener('click',()=>dlg.close());
+$('#setf').addEventListener('submit',e=>{
+  e.preventDefault();
+  const units=$('#s-units').value;
+  cfg={name:$('#s-name').value.trim().slice(0,40),habits:$('#s-hab').value.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,6),sleepGoal:Math.round((num($('#s-sleep').value)||7)*60),stepGoal:Math.round(num($('#s-steps').value)||8000),units};
+  store.set('cfg',cfg);dlg.close();renderAll();
+});
+
+function renderAll(){
+  header();sleep();activity();habits();renderT();weather();
+  $('#note').textContent=sample?'Sample numbers. Your Health data appears after the morning Shortcut runs.':stale?'Health data from '+new Date(stale+'T12:00').toLocaleDateString(undefined,{weekday:'long'})+'. Run the Shortcut for today’s.':'';
+}
+renderAll();
+}
+</script>
+</body>
+</html>
