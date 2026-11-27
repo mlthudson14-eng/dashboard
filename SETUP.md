@@ -37,7 +37,6 @@ In the **Shortcuts** app, tap **+** and name the shortcut **Morning Dashboard**.
    - Filter: *Start Date* **is in the last** `2` **days**
    - Filter: *Value* **is not** In Bed
    - Filter: *Value* **is not** Awake
-   - *(If you wear an Apple Watch, also add: Source **is** your watch. This stops iPhone and Watch sleep from being counted twice.)*
    - Sort by **Start Date**, **Oldest First**
 3. **Repeat with Each** (it uses the Health Samples automatically). Inside it, add:
    - **If**: tap *Input* → choose **Repeat Item**, tap it again and pick **Start Date**. Condition: **is after**. Value: tap and choose the `SleepWindow` variable.
