@@ -46,32 +46,35 @@ In the **Shortcuts** app, tap **+** and name the shortcut **Morning Dashboard**.
 The dashboard receives every piece of sleep, works out which belong to last night, merges any overlaps so nothing is counted twice, and finds your bedtime and wake time itself.
 
 ### Yesterday's activity
+Your iPhone and Apple Watch both count steps, and Health merges them so nothing is counted twice. Shortcuts can't do that merge, so it counts each device separately and the dashboard uses the larger number.
+
 4. **Find Health Samples**
    - Type: **Steps**
    - Filter: *Start Date* **is in the last** `1` **days**
    - Filter: *Start Date* **is not today**
+   - Filter: *Source* **is** your iPhone (pick it from the list)
+   - Group By: **None**
    - → **Calculate Statistics**: **Sum** → **Round Number** (Ones) → **Set Variable** `Steps`
-5. Same as step 4 with Type **Active Energy** → **Set Variable** `Cal`
-6. Same as step 4 with Type **Exercise Minutes** (sometimes listed as *Apple Exercise Time*) → **Set Variable** `Ex`
-
-These two filters together mean "yesterday", without needing date variables.
+5. Same as step 4, but with *Source* **is** your Apple Watch → **Set Variable** `Steps2`
+6. **Find Health Samples**: Type **Active Energy**, *Start Date* **is in the last** `1` **days**, *Start Date* **is not today**, no Source filter, Group By **None** → **Calculate Statistics**: **Sum** → **Round Number** → **Set Variable** `Cal`
+7. Same as step 6 with Type **Exercise Minutes** (sometimes listed as *Apple Exercise Time*) → **Set Variable** `Ex`
 
 ### Recovery
-7. **Find Health Samples**: Type **Heart Rate Variability**, sort by Start Date **Latest First**, **Limit 1** → **Get Details**: Value → **Round Number** → **Set Variable** `HRV`
-8. **Find Health Samples**: Type **Resting Heart Rate**, sort **Latest First**, **Limit 1** → **Get Details**: Value → **Round Number** → **Set Variable** `RHR`
+8. **Find Health Samples**: Type **Heart Rate Variability**, sort by Start Date **Latest First**, **Limit 1** → **Get Details**: Value → **Round Number** → **Set Variable** `HRV`
+9. **Find Health Samples**: Type **Resting Heart Rate**, sort **Latest First**, **Limit 1** → **Get Details**: Value → **Round Number** → **Set Variable** `RHR`
 
 ### Location (for weather)
-9. **Get Current Location** → **Get Details of Locations**: Latitude → **Round Number** (Hundredths) → **Set Variable** `Lat`
-10. **Get Current Location** → **Get Details of Locations**: Longitude → **Round Number** (Hundredths) → **Set Variable** `Lon`
+10. **Get Current Location** → **Get Details of Locations**: Latitude → **Round Number** (Hundredths) → **Set Variable** `Lat`
+11. **Get Current Location** → **Get Details of Locations**: Longitude → **Round Number** (Hundredths) → **Set Variable** `Lon`
 
 ### Open the dashboard
-11. **Text**: type the link below, all on one line with no spaces. Wherever it shows `[Name]`, delete that and insert the variable with that name from the bar above the keyboard.
+12. **Text**: type the link below, all on one line with no spaces. Wherever it shows `[Name]`, delete that and insert the variable with that name from the bar above the keyboard.
 
 ```
-https://mlthudson14-eng.github.io/dashboard/#sl=[Sleep]&steps=[Steps]&cal=[Cal]&ex=[Ex]&rhr=[RHR]&hrv=[HRV]&lat=[Lat]&lon=[Lon]
+https://mlthudson14-eng.github.io/dashboard/#sl=[Sleep]&steps=[Steps]&steps2=[Steps2]&cal=[Cal]&ex=[Ex]&rhr=[RHR]&hrv=[HRV]&lat=[Lat]&lon=[Lon]
 ```
 
-12. **Open URLs** (Text)
+13. **Open URLs** (Text)
 
 Tap ▶ to run it. The first time, iOS asks for permission to read each Health type and your location. Tap **Allow**. The dashboard should open in Safari with your real numbers.
 

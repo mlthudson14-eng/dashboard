@@ -161,12 +161,13 @@ function lastNight(str){
   const f=d=>pad(d.getHours())+':'+pad(d.getMinutes());
   return{sleep:Math.round(total/6e4),bed:f(cl[0][0]),wake:f(end)};
 }
-if(['sl','sleep','steps','rhr','hrv'].some(k=>hp.has(k))){
+if(['sl','sleep','steps','steps2','rhr','hrv'].some(k=>hp.has(k))){
   const g=k=>num(hp.get(k));
   let rec;
   if(hp.has('sl')){const raw=hp.get('sl').trim(),r=lastNight(raw);rec={why:raw===''?'blank':r==null?'bad:'+raw.slice(0,30):r.sleep===0?'zero':null,sleep:r?r.sleep||null:null,bed:r&&r.bed||null,wake:r&&r.wake||null}}
   else rec={why:!hp.has('sleep')?'missing':hp.get('sleep').trim()===''?'blank':g('sleep')==null?'bad:'+hp.get('sleep').slice(0,30):g('sleep')===0?'zero':null,sleep:g('sleep'),bed:toMin(hp.get('bed'))!=null?hp.get('bed'):null,wake:toMin(hp.get('wake'))!=null?hp.get('wake'):null};
-  health[today]=Object.assign(rec,{steps:g('steps'),cal:g('cal'),ex:g('ex'),rhr:g('rhr'),hrv:g('hrv')});
+  const st=[g('steps'),g('steps2')].filter(v=>v!=null);
+  health[today]=Object.assign(rec,{steps:st.length?Math.max(...st):null,cal:g('cal'),ex:g('ex'),rhr:g('rhr'),hrv:g('hrv')});
   const keys=Object.keys(health).sort();while(keys.length>60)delete health[keys.shift()];
   store.set('health',health);
 }
