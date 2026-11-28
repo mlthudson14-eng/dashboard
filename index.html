@@ -46,6 +46,11 @@ h1{font-size:clamp(27px,7.5vw,34px);font-weight:600;line-height:1.05;letter-spac
 .wx svg{width:44px;height:44px}
 .hours{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);margin-top:6px;padding-top:8px;text-align:center;font-size:14px}
 .hours small{display:block;color:var(--mute);font-size:13px}
+.lunch{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.lunch .lrow+.lrow{border-left:1px solid var(--line);padding-left:12px}
+.ent{font-weight:600;line-height:1.3;margin-top:2px}
+.ent .or{font-weight:400;color:var(--mute)}
+.sides{font-size:13px;color:var(--mute);line-height:1.35;margin-top:3px}
 .duo{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:10px}
 .stat{margin-top:4px}
 .stat .row{font-size:14px}
@@ -91,6 +96,7 @@ dialog label{display:block;font-size:14px;color:var(--mute);margin:10px 0 4px}
 
   <section class="card sleep" id="sleep"></section>
   <section class="card wx" id="wx"><div class="lab" style="grid-column:1/-1">Weather is loading…</div></section>
+  <section class="card lunch" id="lunch" hidden></section>
   <div class="duo">
     <section class="card" id="act"></section>
     <section class="card rec" id="rec"></section>
@@ -302,8 +308,24 @@ $('#setf').addEventListener('submit',e=>{
   store.set('cfg',cfg);dlg.close();renderAll();
 });
 
+/* ---- School lunch (lunch.json is refreshed twice a day by a GitHub Action) ---- */
+function renderLunch(L){
+  const el=$('#lunch'),days=(L&&Array.isArray(L.days))?L.days:[];
+  if(!L){el.hidden=true;return}
+  const t=days.find(d=>d.date===today),nx=days.find(d=>d.date>today);
+  const name=k=>{if(k===daysAgo(-1))return'tomorrow';const d=new Date(k+'T12:00'),far=(d-now)/864e5>6;return d.toLocaleDateString(undefined,far?{weekday:'long',month:'short',day:'numeric'}:{weekday:'long'})};
+  const body=d=>'<div class="ent">'+d.entrees.map(esc).join(' <span class="or">or</span> ')+'</div>'+(d.sides.length?'<div class="sides">'+d.sides.map(esc).join(' · ')+'</div>':'');
+  el.innerHTML='<div class="lrow"><div class="lab">Lunch today</div>'+(t?body(t):'<div class="sides">No school lunch today</div>')+'</div>'+
+    '<div class="lrow"><div class="lab">Lunch '+esc(nx?name(nx.date):'next')+'</div>'+(nx?body(nx):'<div class="sides">Menu not posted yet</div>')+'</div>';
+  el.hidden=false;
+}
+function lunch(){
+  renderLunch(store.get('lunch',null));
+  fetch('lunch.json?'+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(L=>{store.set('lunch',L);renderLunch(L)}).catch(()=>{});
+}
+
 function renderAll(){
-  header();sleep();activity();habits();renderT();weather();
+  header();sleep();activity();habits();renderT();weather();lunch();
   $('#note').textContent=sample?'Sample numbers. Your Health data appears after the morning Shortcut runs.':stale?'Health data from '+new Date(stale+'T12:00').toLocaleDateString(undefined,{weekday:'long'})+'. Run the Shortcut for today’s.':'';
 }
 renderAll();

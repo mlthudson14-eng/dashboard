@@ -1,0 +1,26 @@
+name: Update lunch menu
+
+on:
+  schedule:
+    - cron: "17 9 * * *"    # about 5 AM US Eastern
+    - cron: "43 20 * * *"   # about 4 PM US Eastern
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/fetch_lunch.py
+      - name: Commit if the menu changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
+          git add lunch.json
+          git diff --cached --quiet || (git commit -m "Update lunch menu" && git push)
